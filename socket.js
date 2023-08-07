@@ -10,7 +10,7 @@ import dotenv from "dotenv";
 const io = new Server(2001, {
     pingTimeout: 60000,
     cors: {
-        origin: ["http://localhost:3000"]
+        origin: [process.env.LOCAL, process.env.DEV , process.env.DEV1]
     }
 });
 
@@ -34,11 +34,11 @@ var users = [];
 
 io.on("connection", (socket) => {
 
-    
+
 
     socket.on('addUser', (userId) => {
         addUser(userId, socket.id);
-        console.log("users",users);
+        console.log("users", users);
         io.emit('getUsers', users);
     })
 
