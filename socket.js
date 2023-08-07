@@ -3,6 +3,8 @@ import { Server } from "socket.io";
 import { DBConnection } from "./db/DBConnection.js";
 import dotenv from "dotenv";
 import express from "express";
+import cors from "cors";
+
 
 dotenv.config();
 
@@ -25,6 +27,16 @@ DBConnection();
 // });
 
 const app = express();
+
+app.use(cors());
+
+app.use(cors({
+    origin: [process.env.URL, process.env.local],
+    credentials: true
+}));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 const httpServer = createServer(app);
 
 // new
