@@ -2,25 +2,25 @@
 import { Server } from "socket.io";
 import { DBConnection } from "./db/DBConnection.js";
 import dotenv from "dotenv";
-
-
-// ==================================================================
-// server
-
-const io = new Server(2001, {
-    pingTimeout: 60000,
-    cors: {
-        origin: [process.env.LOCAL, process.env.DEV , process.env.DEV1]
-    }
-});
-
-// ==================================================================
-
 dotenv.config();
+
+// ==================================================================
+
 DBConnection();
 
 // ==================================================================
 // middleware
+
+// ==================================================================
+// server
+
+const io = new Server(process.env.PORT, {
+    pingTimeout: 60000,
+    cors: {
+        origin: [process.env.LOCAL, process.env.DEV, process.env.DEV1]
+    }
+});
+
 
 
 // httpServer.listen(2001, () => {
