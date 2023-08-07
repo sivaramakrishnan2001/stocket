@@ -1,12 +1,14 @@
-// import { createServer } from "http";
+import { createServer } from "http";
 import { Server } from "socket.io";
 import { DBConnection } from "./db/DBConnection.js";
 import dotenv from "dotenv";
+import express from "express";
+
 dotenv.config();
 
 // ==================================================================
 
-// DBConnection();
+DBConnection();
 
 // ==================================================================
 // middleware
@@ -14,18 +16,29 @@ dotenv.config();
 // ==================================================================
 // server
 
-const io = new Server(process.env.PORT, {
+// old
+// const io = new Server(process.env.PORT, {
+//     pingTimeout: 60000,
+//     cors: {
+//         origin: [process.env.LOCAL, process.env.DEV, process.env.DEV1]
+//     }
+// });
+
+const httpServer = createServer();
+
+// new
+const io = new Server(httpServer, {
     pingTimeout: 60000,
     cors: {
         origin: [process.env.LOCAL, process.env.DEV, process.env.DEV1]
     }
 });
 
+// const app = express();
+// const server = createServer(app);
+// const io = socketIO(server);
 
 
-// httpServer.listen(2001, () => {
-//     console.log(`server started http://localhost:${2001}`);
-// });
 
 // ==================================================================
 
@@ -67,4 +80,10 @@ const getUser = (userId) => {
     return users.find((user) => user.userId === userId);
 }
 
+
+
+
+httpServer.listen(process.env.PORT, () => {
+    console.log(`server started http://localhost:${process.env.PORT}`);
+});
 
