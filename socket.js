@@ -24,17 +24,19 @@ DBConnection();
 //     }
 // });
 
-const httpServer = createServer();
+const app = express();
+const httpServer = createServer(app);
 
 // new
-const io = new Server(httpServer, {
-    pingTimeout: 60000,
-    cors: {
-        origin: [process.env.LOCAL, process.env.DEV, process.env.DEV1]
-    }
-});
+// const io = new Server(httpServer, {
+//     pingTimeout: 60000,
+//     cors: {
+//         origin: [process.env.LOCAL, process.env.DEV, process.env.DEV1]
+//     }
+// });
 
-// const app = express();
+const io = new Server(httpServer);
+
 // const server = createServer(app);
 // const io = socketIO(server);
 
