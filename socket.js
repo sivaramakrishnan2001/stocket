@@ -19,23 +19,24 @@ DBConnection();
 // server
 
 // old
-// const io = new Server(process.env.PORT, {
-//     pingTimeout: 60000,
-//     cors: {
-//         origin: [process.env.LOCAL, process.env.DEV, process.env.DEV1]
-//     }
-// });
 
-const app = express();
+const io = new Server(process.env.PORT, {
+    pingTimeout: 60000,
+    cors: {
+        origin: [process.env.LOCAL, process.env.DEV, process.env.DEV1]
+    }
+});
 
-app.use(cors());
+// const app = express();
 
-app.use(cors({
-    origin: [process.env.URL, process.env.local],
-    credentials: true
-}));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// app.use(cors());
+
+// app.use(cors({
+//     origin: [process.env.URL, process.env.local],
+//     credentials: true
+// }));
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: true }));
 
 // const httpServer = createServer(app);
 
@@ -53,53 +54,48 @@ app.use(express.urlencoded({ extended: true }));
 // const io = socketIO(server);
 
 
-
 // ==================================================================
 
-// var users = [];
+var users = [];
 
 
-// io.on("connection", (socket) => {
+io.on("connection", (socket) => {
 
+    socket.on('addUser', (userId) => {
+        addUser(userId, socket.id);
+        console.log("users", users);
+        io.emit('getUsers', users);
+    })
 
+    socket.on('sendMessage', ({ senderId, receiverId, text }) => {
+        const user = getUser(receiverId);
+        io.to(user?.socketId).emit("getMessage",
+            {
+                senderId,
+                text
+            }
+        )
+    })
 
-//     socket.on('addUser', (userId) => {
-//         addUser(userId, socket.id);
-//         console.log("users", users);
-//         io.emit('getUsers', users);
-//     })
+    socket.on("disconnect", () => {
+        console.log("a user disconnected!");
 
-//     socket.on('sendMessage', ({ senderId, receiverId, text }) => {
-//         const user = getUser(receiverId);
-//         io.to(user?.socketId).emit("getMessage",
-//             {
-//                 senderId,
-//                 text
-//             }
-//         )
-//     })
-
-//     socket.on("disconnect", () => {
-//         console.log("a user disconnected!");
-
-//     });
-// });
-
-// const addUser = (userId, socketId) => {
-//     !users.some((user) => user.userId === userId) &&
-//         users.push({ userId, socketId });
-// }
-
-// const getUser = (userId) => {
-//     return users.find((user) => user.userId === userId);
-// }
-
-
-
-
-app.listen(process.env.PORT, () => {
-    console.log(`server started http://localhost:${process.env.PORT}`);
+    });
 });
+
+const addUser = (userId, socketId) => {
+    !users.some((user) => user.userId === userId) &&
+        users.push({ userId, socketId });
+}
+
+const getUser = (userId) => {
+    return users.find((user) => user.userId === userId);
+}
+
+
+// app.listen(process.env.PORT, () => {
+//     console.log(`server started http://localhost:${process.env.PORT}`);
+// });
 
 
 
