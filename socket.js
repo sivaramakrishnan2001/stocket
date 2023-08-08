@@ -19,13 +19,14 @@ DBConnection();
 // server
 
 // old
-
 const io = new Server(process.env.PORT, {
     pingTimeout: 60000,
     cors: {
         origin: [process.env.LOCAL, process.env.DEV, process.env.DEV1]
     }
 });
+
+
 
 // const app = express();
 
